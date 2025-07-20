@@ -22,12 +22,14 @@ async def main():
         page = await browser.new_page()
         for url in urls:
             await page.goto(url)
+            await page.wait_for_selector("table")  # Wait until table appears
             numbers = await page.eval_on_selector_all(
-                "table td",
-                "elements => elements.map(e => parseFloat(e.textContent)).filter(n => !isNaN(n))"
+              "table td",
+              "elements => elements.map(e => parseFloat(e.textContent)).filter(n => !isNaN(n))"
             )
+            print(f"{url}: {numbers}")  # Debug
             total += sum(numbers)
-        print(f"Total sum: {total}")
+        print(f"Sum: {total}")
         await browser.close()
 
 asyncio.run(main())
